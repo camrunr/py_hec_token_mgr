@@ -45,28 +45,26 @@ def auth(un,pw):
     res = r.json()
     return res["token"]
 
-
-    #header = {'Authorization': 'Bearer {}'.format(bearer_token)}
-def add_token(bt, args):
-    header = { 'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bt }
-    #d = { 'description': args.desc, 'token': args.token, "metadata": [{"test": "value"}] }
-    da = { 'description': args.desc, 'token': args.token }
-    fixed_uri = add_uri.replace('GROUP', args.group).replace('INPUT',args.input)
-    r = requests.post(api_base+fixed_uri,headers=header,data=da,verify=False)
-    if r.status_code == "200":
+def add_token(header, args):
+    # send the request to create the token
+    jd = {"description": args.desc, "token": args.token }
+    my_uri = add_uri.replace('GROUP', args.group).replace('INPUT',args.input)
+    r = requests.post(api_base+my_uri,headers=header,json=jd,verify=False)
+    if r.status_code == 200:
         print("good!")
         return True
     else:
-        print("bad! JSON follows:\n")
-        print(r.json())
+        print(r.status_code)
+        print("bad! Response JSON follows:\n" + str(r.json()))
         return False
 
-def mod_token(bt,args):
-    header = { 'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bt }
+def mod_token(header,args):
     # not implemented yet
+    return True
 
 if __name__ == "__main__":
     args = parse_args()
     bearer_token = auth(args.username, str(args.password))
-    print(bearer_token)
-    add_token(bearer_token,args)
+    header = { 'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearer_token }
+    #print(bearer_token)
+    add_token(header,args)
