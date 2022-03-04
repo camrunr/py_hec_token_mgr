@@ -31,7 +31,7 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-l', '--leader', help='Specify leader URL, http(s)://leader:port',required=True)
     parser.add_argument('-u', '--username', help='Specify username, or default is admin',default='admin')
-    # parser.add_argument('-t', '--token', type=str, help="The target HEC token", required=True)
+    parser.add_argument('-t', '--token', type=str, help="Specify your own token, if you don't want one generated.", default='')
     parser.add_argument('-a', '--action', type=str, help="The action: add or modify", choices=['add','modify'], required=True)
     parser.add_argument('-d', '--desc', type=str, help="The token descriptor, defaults to empty",default="")
     parser.add_argument('-g', '--group', type=str, help="The target worker group", required=True)
@@ -77,7 +77,10 @@ def build_token():
 
 if __name__ == "__main__":
     args = parse_args()
-    args.token=build_token()
+    if not args.token:
+        args.token=build_token()
+    else:
+        args.token=args.token
     bearer_token = auth(args.leader,args.username, str(args.password))
     header = { 'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearer_token }
     #print(bearer_token)
