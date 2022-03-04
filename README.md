@@ -5,8 +5,9 @@ This script is intended as an example of how to authenticate in Cribl Stream, an
 Usage:
 
 > py_hec_token_mgr.py [-h] -l http://leader:port [-u USERNAME] -t TOKEN -a {add,modify} [-d DESC] -g GROUP -i INPUT [-p PASSWORD]
-* the following arguments are required: -l/--leader, -t/--token, -a/--action, -g/--group, -i/--input
+* the following arguments are required: -l/--leader, -a/--action, -g/--group, -i/--input
 * if no password is supplied, you'll be prompted 
+* if you do not specify a token one will be generated for you
 * currently the modify action does nothing
 
 Requirements:
