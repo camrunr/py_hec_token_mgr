@@ -6,7 +6,9 @@ import os
 import sys
 import argparse
 import getpass
+import secrets
 
+requests.urllib3.disable_warnings(requests.urllib3.exceptions.InsecureRequestWarning)
 # where we login to get a bearer token
 auth_uri = '/api/v1/auth/login'
 # where we post to add a token (GROUP and INPUT will be replaced from args)
@@ -29,7 +31,7 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-l', '--leader', help='Specify leader URL, http(s)://leader:port',required=True)
     parser.add_argument('-u', '--username', help='Specify username, or default is admin',default='admin')
-    parser.add_argument('-t', '--token', type=str, help="The target HEC token", required=True)
+    parser.add_argument('-t', '--token', type=str, help="Specify your own token, if you don't want one generated.", default='')
     parser.add_argument('-a', '--action', type=str, help="The action: add or modify", choices=['add','modify'], required=True)
     parser.add_argument('-d', '--desc', type=str, help="The token descriptor, defaults to empty",default="")
     parser.add_argument('-g', '--group', type=str, help="The target worker group", required=True)
@@ -58,6 +60,7 @@ def add_token(header, args):
     r = requests.post(args.leader+my_uri,headers=header,json=jd,verify=False)
     if r.status_code == 200:
         print("good!")
+        print("Generated Token is: " + args.token)
         return True
     else:
         print(r.status_code)
@@ -68,8 +71,16 @@ def mod_token(header,args):
     # not implemented yet
     return True
 
+def build_token():
+    hec_token=secrets.token_hex(4) + "-" + secrets.token_hex(2) + "-" + secrets.token_hex(2) + "-" + secrets.token_hex(2)+ "-" + secrets.token_hex(6)
+    return hec_token
+
 if __name__ == "__main__":
     args = parse_args()
+    if not args.token:
+        args.token=build_token()
+    else:
+        args.token=args.token
     bearer_token = auth(args.leader,args.username, str(args.password))
     header = { 'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearer_token }
     #print(bearer_token)
