@@ -51,7 +51,7 @@ def parse_args():
     parser.add_argument('-g', '--group', type=str, help="The target worker group", required=True)
     parser.add_argument('-i', '--input', type=str, help="The target inputId", required=True) 
     parser.add_argument('-p', '--password', type=Password, help='Specify password, or get prompted',default=Password.DEFAULT)
-    parser.add_argument('-m', '--metadata', nargs='*', help='Pass metadata to the script in key:value pair form. Javascript expression allowed. ex: index=\"\'test\'\"', action = keyvalue, default='')
+    parser.add_argument('-m', '--metadata', nargs='*', help='Pass metadata to the script in key:value pair form. Javascript expression allowed. Multiple fields allowed ex: -m index=\"\'test\'\" sourcetype=\"\'mysource\'\"' , action = keyvalue, default='')
     args = parser.parse_args()
     return args
 
