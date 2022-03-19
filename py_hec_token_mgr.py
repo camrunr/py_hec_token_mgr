@@ -135,7 +135,7 @@ if __name__ == "__main__":
         header = { 'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearer_token }
         #print(bearer_token)
         add_token(header,args)
-    else:
+    elif args.action == 'modify':
         print("modify")
         bearer_token = auth(args.leader,args.username, str(args.password))
         header = { 'accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearer_token }
